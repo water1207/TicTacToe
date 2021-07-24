@@ -31,8 +31,8 @@ function step(board,pos){
   
   return {
     turn:!board.turn,
-    O:board.turn? board.X : board.X.set(ppos,true),
-    X:board.turn? board.O.set(ppos,true) : board.O
+    X:board.turn?  board.X.set(ppos,true) : board.X ,
+    O:board.turn?  board.O : board.O.set(ppos,true) 
   };
 }
 function getCell(bb,i){
