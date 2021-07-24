@@ -1,6 +1,6 @@
 'reach 0.1';
 
-const DEADLINE = 120;
+const DEADLINE = 60;
 const ROWS = 3;
 const COLS = 3;
 const CELLS = ROWS * COLS;
