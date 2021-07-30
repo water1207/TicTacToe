@@ -1,6 +1,6 @@
 'reach 0.1';
 
-const DEADLINE = 60;
+//const DEADLINE = 60;
 const ROWS = 3;
 const COLS = 3;
 const CELLS = ROWS * COLS;
@@ -92,7 +92,8 @@ const Player = {
 }
 const Alice = {
   ...Player,
-  wager: UInt
+  wager: UInt,
+  deadline: UInt, // time delta (blocks/rounds)
 }
 const Bob = {
   ...Player,
@@ -107,15 +108,17 @@ export const main = Reach.App(
         interact.informTimeout(); }); };
 
     A.only(() => {
-      const wager = declassify(interact.wager); });
-    A.publish(wager)
+      const wager = declassify(interact.wager);
+      const deadline = declassify(interact.deadline);
+    });
+    A.publish(wager, deadline)
       .pay(wager);
     commit();
 
     B.only(() => {
       interact.acceptWager(wager); });
     B.pay(wager)
-     .timeout(DEADLINE, () => closeTo(A, informTimeout));
+     .timeout(deadline, () => closeTo(A, informTimeout));
 
     var board = newBoard(true);
     invariant(balance() == 2 * wager);
@@ -126,7 +129,7 @@ export const main = Reach.App(
           interact.out(board)
           const moveA = declassify(interact.getStep(board)); });
         A.publish(moveA)
-         .timeout(DEADLINE, () => closeTo(B, informTimeout));
+         .timeout(deadline, () => closeTo(B, informTimeout));
 
         board = step(board, moveA);
         continue;
@@ -137,7 +140,7 @@ export const main = Reach.App(
           interact.out(board)
           const moveB = declassify(interact.getStep(board));});
         B.publish(moveB)
-         .timeout(DEADLINE, () => closeTo(A, informTimeout));
+         .timeout(deadline, () => closeTo(A, informTimeout));
 
         board = step(board, moveB);
         continue; } 
