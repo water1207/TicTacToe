@@ -1,5 +1,5 @@
 import React from 'react';
-
+import fr from '.././fr.js'
 const exports = {};
 
 // Player views must be extended.
@@ -7,7 +7,7 @@ const exports = {};
 
 exports.GetHand = class extends React.Component {
   render() {
-    const {parent, playable, hand} = this.props;
+    const { parent, playable, hand } = this.props;
     return (
       <div>
         {hand ? 'It was a draw! Pick again.' : ''}
@@ -34,9 +34,8 @@ exports.GetHand = class extends React.Component {
 class Square extends React.Component {
   render() {
     return (
-      <button 
-      className="confirm"
-        className={this.props.old? "square old_board":"square"}
+      <button
+        className={this.props.old ? "square old_board" : "square"}
         onClick={() => this.props.onClick()}>
         {this.props.value}
       </button>
@@ -49,76 +48,77 @@ exports.GetStep = class extends React.Component {
 
   constructor(props) {
     super(props);
-    const {parent, board} = this.props;
+    const { parent, board } = this.props;
     this.state = {
-      step:-1,
-      confirmed:false,
+      step: -1,
+      confirmed: false,
       squares: Array(9).fill(null),
-      board:board,
-      old_board:board,
-      parent:parent
+      board: board,
+      old_board: board,
+      parent: parent,
     }
   }
-  
-  
-  cellBoth(board,i){
+
+
+  cellBoth(board, i) {
     return (board.O[i] || board.X[i]);
   }
   oldState(i) {
-    return this.cellBoth(this.state.old_board,i);
+    return this.cellBoth(this.state.old_board, i);
   }
   nowState(i) {
-    return this.cellBoth(this.state.board,i);
+    return this.cellBoth(this.state.board, i);
   }
   handleClick(i) {
-    if(this.state.confirmed) return
-    
-    if(this.state.board.turn && !this.nowState(i)){
+    if (this.state.confirmed) return
+
+    if (this.state.board.turn && !this.nowState(i)) {
       const board = JSON.parse(JSON.stringify(this.state.old_board));
       board.X[i] = true;
-      this.setState({board: board,step: i})
-    }else if(!this.nowState(i)){
+      this.setState({ board: board, step: i })
+    } else if (!this.nowState(i)) {
       const board = JSON.parse(JSON.stringify(this.state.old_board));
       board.O[i] = true;
-      this.setState({board: board,step: i})
+      this.setState({ board: board, step: i })
     }
   }
   clickConfirm() {
-    if(!this.state.confirmed){
+    if (!this.state.confirmed) {
       console.log(this.state.step)
-      this.setState({confirmed: true})
+      this.setState({ confirmed: true })
     }
     this.state.parent.playStep(this.state.step)
   }
 
   renderValue(i) {
-    if(this.state.board.O[i] || this.state.old_board.O[i]){
+    if (this.state.board.O[i] || this.state.old_board.O[i]) {
       return "O";
-    }else if(this.state.board.X[i] || this.state.old_board.X[i]){
-     return "X";
-    }else{
+    } else if (this.state.board.X[i] || this.state.old_board.X[i]) {
+      return "X";
+    } else {
       return null;
     }
   }
   renderSquare(i) {
-    return <Square 
-             value={this.renderValue(i)} 
-             onClick={() => this.handleClick(i)}
-             old={this.oldState(i)}
-             />;
+    return <Square
+      value={this.renderValue(i)}
+      onClick={() => this.handleClick(i)}
+      old={this.oldState(i)}
+    />;
   }
 
   render() {
 
     return (
       <div className="board">
+
         {/* <div className="status">{this.state.step}</div> */}
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
           {this.renderSquare(2)}
         </div>
-        
+
         <div className="board-row">
           {this.renderSquare(3)}
           {this.renderSquare(4)}
@@ -130,12 +130,13 @@ exports.GetStep = class extends React.Component {
           {this.renderSquare(8)}
         </div>
         <div className="confirm_div">
-          <button 
-            className="confirm" 
-            disabled={this.state.step===-1 || this.state.confirmed? "disabled":null}
-            onClick={()=>this.clickConfirm()}
-            >确认</button>
+          <button
+            className="confirm"
+            disabled={this.state.step === -1 || this.state.confirmed ? "disabled" : null}
+            onClick={() => this.clickConfirm()}
+          >确认</button>
         </div>
+
       </div>
     );
   }
@@ -154,86 +155,106 @@ exports.WaitingForResults = class extends React.Component {
 exports.Done = class extends React.Component {
   constructor(props) {
     super(props);
-    const {parent, outcome} = this.props;
+    const { parent, outcome, role } = this.props;
     this.state = {
-      step:-1,
-      confirmed:true,
+      step: -1,
+      confirmed: true,
       squares: Array(9).fill(null),
-      board:outcome,
-      old_board:outcome,
-      parent:parent
+      board: outcome,
+      old_board: outcome,
+      parent: parent,
+      first: true,
+      role: role
+    }
+
+  }
+
+  componentDidMount() {
+    if (this.state.role === "Attacher") {
+      fr.init();
+      fr.draw();
     }
   }
-  
-  
-  cellBoth(board,i){
+
+  cellBoth(board, i) {
     return (board.O[i] || board.X[i]);
   }
   oldState(i) {
-    return this.cellBoth(this.state.old_board,i);
+    return this.cellBoth(this.state.old_board, i);
   }
   nowState(i) {
-    return this.cellBoth(this.state.board,i);
+    return this.cellBoth(this.state.board, i);
   }
   handleClick(i) {
-    if(this.state.confirmed) return
-    
-    if(this.state.board.turn && !this.nowState(i)){
+    if (this.state.confirmed) return
+
+    if (this.state.board.turn && !this.nowState(i)) {
       const board = JSON.parse(JSON.stringify(this.state.old_board));
       board.X[i] = true;
-      this.setState({board: board,step: i})
-    }else if(!this.nowState(i)){
+      this.setState({ board: board, step: i })
+    } else if (!this.nowState(i)) {
       const board = JSON.parse(JSON.stringify(this.state.old_board));
       board.O[i] = true;
-      this.setState({board: board,step: i})
+      this.setState({ board: board, step: i })
     }
   }
   clickConfirm() {
-    if(!this.state.confirmed){
+    if (!this.state.confirmed) {
       console.log(this.state.step)
-      this.setState({confirmed: true})
+      this.setState({ confirmed: true })
     }
     this.state.parent.playStep(this.state.step)
   }
 
   renderValue(i) {
-    if(this.state.board.O[i] || this.state.old_board.O[i]){
+    if (this.state.board.O[i] || this.state.old_board.O[i]) {
       return "O";
-    }else if(this.state.board.X[i] || this.state.old_board.X[i]){
-     return "X";
-    }else{
+    } else if (this.state.board.X[i] || this.state.old_board.X[i]) {
+      return "X";
+    } else {
       return null;
     }
   }
   renderSquare(i) {
-    return <Square 
-             value={this.renderValue(i)} 
-             onClick={() => this.handleClick(i)}
-             old={this.oldState(i)}
-             />;
+    return <Square
+      value={this.renderValue(i)}
+      onClick={() => this.handleClick(i)}
+      old={this.oldState(i)}
+    />;
   }
+
   render() {
     return (
       <div>
+        { this.state.role === "Attacher" ? (
+            <div>
+              <div id="canvas"></div>
+              <div id="again">
+                <h2>Congratulations on winning the game!</h2><br />
+                {/* <button className="confirm">play again</button> */}
+              </div>
+            </div>
+          ) : null}
+
         Thank you for playing. The outcome of this game was:
         <div className="board">
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
+          <div className="board-row">
+            {this.renderSquare(0)}
+            {this.renderSquare(1)}
+            {this.renderSquare(2)}
+          </div>
+
+          <div className="board-row">
+            {this.renderSquare(3)}
+            {this.renderSquare(4)}
+            {this.renderSquare(5)}
+          </div>
+          <div className="board-row">
+            {this.renderSquare(6)}
+            {this.renderSquare(7)}
+            {this.renderSquare(8)}
+          </div>
         </div>
-        
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
       </div>
     );
   }

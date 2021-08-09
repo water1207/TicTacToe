@@ -5,6 +5,7 @@ import AttacherViews from './views/AttacherViews';
 import {renderDOM, renderView} from './views/render';
 import './index.css';
 import * as backend from './build/index.main.mjs';
+
 // import * as reach from '@reach-sh/stdlib/ETH';
 import {loadStdlib} from '@reach-sh/stdlib';
 const reach = loadStdlib(process.env);
@@ -35,8 +36,8 @@ class App extends React.Component {
     this.setState({view: 'DeployerOrAttacher'});
   }
   async skipFundAccount() { this.setState({view: 'DeployerOrAttacher'}); }
-  selectAttacher() { this.setState({view: 'Wrapper', ContentView: Attacher}); }
-  selectDeployer() { this.setState({view: 'Wrapper', ContentView: Deployer}); }
+  selectAttacher() { this.setState({view: 'Wrapper', ContentView: Attacher, role:'Attacher' }); }
+  selectDeployer() { this.setState({view: 'Wrapper', ContentView: Deployer, role:'Deployer'}); }
   render() { return renderView(this, AppViews); }
 
 }
