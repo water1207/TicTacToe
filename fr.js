@@ -7,7 +7,7 @@ canvas.style.width = '100%';
 canvas.style.height = '100vh';
 
 canvas.width = window.screen.availWidth;
-canvas.height = window.screen.availHeight - 50;
+canvas.height = window.screen.availHeight - 100;
 let ctx = canvas.getContext('2d');
 
 function rndNum(num) {
@@ -131,12 +131,8 @@ var fireworks = [],
   flash = false;
 
 function init() {
-  console.log("init");
-
   let canvas = document.createElement('canvas');
-
   var box = document.getElementById("canvas");
-
   if (box.children.length) {
     box.removeChild(box);
   }

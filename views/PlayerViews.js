@@ -34,8 +34,8 @@ exports.GetHand = class extends React.Component {
 class Square extends React.Component {
   render() {
     return (
-      <button 
-        className={this.props.old? "square old_board":"square"}
+      <button
+        className={this.props.old ? "square old_board" : "square"}
         onClick={() => this.props.onClick()}>
         {this.props.value}
       </button>
@@ -170,7 +170,8 @@ exports.Done = class extends React.Component {
   }
 
   componentDidMount() {
-    if (this.state.role === "Attacher") {
+    console.log(this.state.board);
+    if (this.state.board.win === true) {
       fr.init();
       fr.draw();
     }
@@ -226,15 +227,18 @@ exports.Done = class extends React.Component {
   render() {
     return (
       <div>
-        { this.state.role === "Attacher" ? (
-            <div>
+        {
+          this.state.board.win ? (
+            <div >
               <div id="canvas"></div>
               <div id="again">
                 <h2>Congratulations on winning the game!</h2><br />
                 {/* <button className="confirm">play again</button> */}
               </div>
             </div>
-          ) : null}
+          ) : ''
+        }
+
 
         Thank you for playing. The outcome of this game was:
         <div className="board">

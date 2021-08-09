@@ -139,12 +139,12 @@ ol, ul {
   margin-left: 20px;
 } */
 .confirm_div{
-  padding-top:50px;
+  padding-top:10px;
 }
 .confirm,
 .confirm:focus{
   font-size: calc(5px + 2vmin);
-  margin-left: 5px;
+  margin: 5px;
     /* font-size:calc(1px + 2vmin); */
     border: 4px solid rgba(0,144,108,0.3);
     outline: none !important;
