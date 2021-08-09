@@ -35,6 +35,7 @@ class Square extends React.Component {
   render() {
     return (
       <button 
+      className="confirm"
         className={this.props.old? "square old_board":"square"}
         onClick={() => this.props.onClick()}>
         {this.props.value}

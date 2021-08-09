@@ -30,6 +30,7 @@ exports.Attach = class extends React.Component {
         />
         <br />
         <button
+        className="confirm"
           disabled={!ctcInfoStr}
           onClick={() => parent.attach(ctcInfoStr)}
         >Attach</button>
@@ -58,6 +59,7 @@ exports.AcceptTerms = class extends React.Component {
         <br /> Wager: {wager} {standardUnit}
         <br />
         <button
+        className="confirm"
           disabled={disabled}
           onClick={() => {
             this.setState({disabled: true});

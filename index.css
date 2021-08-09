@@ -31,8 +31,8 @@ code {
 }
 
 input[type=number] {
-  font-size: calc(10px + 2vmin);
-  width: 4em;
+  font-size: calc(5px + 2vmin);
+  width: 6em;
 }
 
 button {
@@ -44,13 +44,31 @@ textarea {
 }
 
 .ContractInfo {
+
+  border:0;
+  border-radius:5px;
+  background-color:rgba(241,241,241,.98);
+  /* width: 355px; */
+  /* height: 100px; */
+  /* padding: 10px; */
+  resize: none;
+  color:rgb(22,111,107);
+
+  margin: 10px auto;  
   font-size: calc(10px + 1vmin);
   text-align: left;
-  width: 90vw;
+  width: 60vw;
   height: 7em;
   padding: 2vw;
   overflow-x: scroll;
-  white-space: pre;
+  /* white-space: pre; */
+  /* background-color: rgb(234, 252, 251); */
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+.ContractInfo:focus {
+  outline: none;
+  border:0;
 }
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
@@ -61,6 +79,7 @@ ol, ul {
   padding-left: 30px;
 }
 .board{
+  margin-top: 20px;
   text-align:center;
 }
 .board-row:after {
@@ -124,7 +143,9 @@ ol, ul {
 }
 .confirm,
 .confirm:focus{
-    font-size:calc(1px + 2vmin);
+  font-size: calc(5px + 2vmin);
+  margin: 5px;
+    /* font-size:calc(1px + 2vmin); */
     border: 4px solid rgba(0,144,108,0.3);
     outline: none !important;
     padding:5px 10px;
@@ -132,8 +153,8 @@ ol, ul {
     font-weight: 700;
     background-color: rgb(196,230,228);
     box-shadow:  3px 3px 10px rgba(0,0,0,0.1),-1px -1px 10px rgba(255,255,255,0.1);
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
+    border-radius: 10px;
+    -webkit-border-radius: 5px;
 }
 .confirm:active{
     outline: none;
@@ -143,4 +164,23 @@ ol, ul {
   color:rgb(94,94,94);
   border: 3px solid rgb(204,204,204);
   background-color: rgb(193,193,193);
+}
+
+input {
+  margin: 5px;
+    font-size:calc(1px + 2vmin);
+    border: 3px solid rgba(0,144,108,0.2);
+    outline: none !important;
+    padding:5px 5px;
+    color:rgb(22,111,107);
+    font-weight: 500;
+    background-color: rgb(211, 231, 230);
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+input:focus{
+  border-color: rgba(0,144,108,0.3);
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.025);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.025)
 }
