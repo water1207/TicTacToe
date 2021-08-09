@@ -34,8 +34,8 @@ exports.GetHand = class extends React.Component {
 class Square extends React.Component {
   render() {
     return (
-      <button
-        className={this.props.old ? "square old_board" : "square"}
+      <button 
+        className={this.props.old? "square old_board":"square"}
         onClick={() => this.props.onClick()}>
         {this.props.value}
       </button>

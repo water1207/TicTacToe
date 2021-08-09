@@ -9,14 +9,16 @@ const b = Array(Bool, 9);
 const Board = Object({
   turn:Bool,
   O:b,
-  X:b
+  X:b,
+  win:Bool
 })
 
 const bv = Array.replicate(CELLS,false);
 const newBoard = (turn) => ({
-  turn:turn,
+  turn: turn,
   O:bv,
-  X:bv
+  X:bv,
+  win: false
 })
 const cellBoth = (st, i) =>
       (st.X[i] || st.O[i]);
@@ -32,7 +34,8 @@ function step(board,pos){
   return {
     turn:!board.turn,
     X:board.turn?  board.X.set(ppos,true) : board.X ,
-    O:board.turn?  board.O : board.O.set(ppos,true) 
+    O:board.turn?  board.O : board.O.set(ppos,true) ,
+    win: false
   };
 }
 function getCell(bb,i){
@@ -81,7 +84,14 @@ function allPlaced(board){
 function isDone(board){
   return (isWin(board.O) || isWin(board.X) || allPlaced(board));
 }
-
+const finalBoardX = (board) => ({
+  ...board,
+  win: isWin(board.X)
+})
+const finalBoardO = (board) => ({
+  ...board,
+  win: isWin(board.O)
+})
 
 
 const Player = {
@@ -146,15 +156,18 @@ export const main = Reach.App(
         continue; } 
     }
     const [ toA, toB ] =
-          (isWin( board.O ) ? [ 2, 0 ]
-          : (isWin( board.X ) ? [ 0, 2 ]
+          (isWin( board.X ) ? [ 2, 0 ]
+          : (isWin( board.O ) ? [ 0, 2 ]
           : [ 1, 1 ]));
     transfer(toA * wager).to(A);
     transfer(toB * wager).to(B);
     commit();
 
-    each([A, B], () => {
-      interact.out(board);
-    })
+    A.only(()=>{
+      interact.out(finalBoardX(board));
+    });
+    B.only(()=>{
+      interact.out(finalBoardO(board));
+    });
   }
 );
