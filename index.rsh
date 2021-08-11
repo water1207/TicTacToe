@@ -98,8 +98,10 @@ const Player = {
   ...hasRandom,
   out: Fun([Board], Null),
   getStep: Fun([Board], UInt),
-  informTimeout: Fun([], Null)
-}
+  informTimeout: Fun([], Null),
+  getId: Fun([], UInt),
+  showEnd: Fun([Board, UInt, Address], Null)
+};
 const Alice = {
   ...Player,
   wager: UInt,
@@ -109,10 +111,11 @@ const Bob = {
   ...Player,
   acceptWager: Fun([UInt], Null)
 }
-
+const Nft = 
+      { owner: Address };
 export const main = Reach.App(
-  {}, [Participant('Alice', Alice), Participant('Bob', Bob)],
-  (A, B) => {
+  {}, [Participant('Alice', Alice), Participant('Bob', Bob), View('NFT', Nft)],
+  (A, B, vNFT) => {
     const informTimeout = () => {
       each([A, B], () => {
         interact.informTimeout(); }); };
@@ -159,15 +162,28 @@ export const main = Reach.App(
           (isWin( board.X ) ? [ 2, 0 ]
           : (isWin( board.O ) ? [ 0, 2 ]
           : [ 1, 1 ]));
+    // A create an NFT
+    commit();
+    A.only(() => {
+      const id = declassify(interact.getId());
+    });
+    A.publish(id);
+      
+    const owner = isWin( board.X ) ? A : B;
+    vNFT.owner.set(owner);  //winner get the NFT
+    //
+
     transfer(toA * wager).to(A);
     transfer(toB * wager).to(B);
     commit();
 
     A.only(()=>{
-      interact.out(finalBoardX(board));
+      interact.showEnd(finalBoardX(board), id, owner);
+      //interact.out(finalBoardX(board));
     });
     B.only(()=>{
-      interact.out(finalBoardO(board));
+      interact.showEnd(finalBoardO(board), id, owner);
+      //interact.out(finalBoardO(board));
     });
   }
 );

@@ -5,13 +5,15 @@ import AttacherViews from './views/AttacherViews';
 import {renderDOM, renderView} from './views/render';
 import './index.css';
 import * as backend from './build/index.main.mjs';
+import * as loader from '@reach-sh/stdlib';
 
 // import * as reach from '@reach-sh/stdlib/ETH';
 import {loadStdlib} from '@reach-sh/stdlib';
 const reach = loadStdlib(process.env);
+// const stdlib = loadStdlib(process.env);
 
 const {standardUnit} = reach;
-const defaults = {defaultFundAmt: '10', defaultWager: '5', standardUnit};
+const defaults = {defaultFundAmt: '100', defaultWager: '50', standardUnit};
 
     
 class App extends React.Component {
@@ -20,7 +22,7 @@ class App extends React.Component {
     this.state = {view: 'ConnectAccount', ...defaults};
   }
   async componentDidMount() {
-    const acc = await reach.getDefaultAccount();
+    const acc = await reach.getDefaultAccount(); 
     const balAtomic = await reach.balanceOf(acc);
     const bal = reach.formatCurrency(balAtomic, 4);
     this.setState({acc, bal});
@@ -46,6 +48,9 @@ class Player extends React.Component {
   out(arr) {
     this.setState({view: 'Done', outcome: arr});
   }
+  async showEnd(arr, id, owner) {
+    this.setState({view: 'Done', outcome: arr, nft_id: id, owner: reach.formatAddress(owner)})
+  }
   async getStep(board) {
     const step = await new Promise(resolveStep => {
       this.setState({view: 'GetStep', board: board, resolveStep});
@@ -55,6 +60,12 @@ class Player extends React.Component {
   }
   playStep(step) {this.state.resolveStep(step)}
   informTimeout() { this.setState({view: 'Timeout'}); }
+  getId() {     
+    const id = reach.randomUInt();
+    //const id = 12345;
+    console.log(` Alice makes id #${id}`);
+    return id; 
+  }
 }
 
 class Deployer extends Player {
