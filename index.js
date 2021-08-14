@@ -14,7 +14,12 @@ const reach = loadStdlib(process.env);
 
 const {standardUnit} = reach;
 const defaults = {defaultFundAmt: '100', defaultWager: '50', standardUnit};
+const randomArrayRef = (arr) =>
+  arr[Math.floor(Math.random() * arr.length)];
 
+const urlArr = ['https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh',
+          'https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh',
+          'https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh'];
     
 class App extends React.Component {
   constructor(props) {
@@ -48,8 +53,12 @@ class Player extends React.Component {
   out(arr) {
     this.setState({view: 'Done', outcome: arr});
   }
-  async showEnd(arr, id, owner) {
-    this.setState({view: 'Done', outcome: arr, nft_id: id, owner: reach.formatAddress(owner)})
+  async showEnd(arr, id, owner, url) {
+    this.setState({view: 'Done', 
+                   outcome: arr, 
+                   nft_id: id, 
+                   owner: reach.formatAddress(owner),
+                   url: url})
   }
   async getStep(board) {
     const step = await new Promise(resolveStep => {
@@ -62,9 +71,17 @@ class Player extends React.Component {
   informTimeout() { this.setState({view: 'Timeout'}); }
   getId() {     
     const id = reach.randomUInt();
-    //const id = 12345;
     console.log(` Alice makes id #${id}`);
     return id; 
+  }
+  getUrl() {
+    const url = randomArrayRef(urlArr);
+    console.log(`url: ${url}`);
+    return url;
+  }
+  async preview(id, url) {
+    //this.setState({view: ''})
+    console.log(`nft_id: ${id}, url: ${url}`);
   }
 }
 
