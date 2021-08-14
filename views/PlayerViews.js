@@ -155,7 +155,7 @@ exports.WaitingForResults = class extends React.Component {
 exports.Done = class extends React.Component {
   constructor(props) {
     super(props);
-    const { parent, outcome, role } = this.props;
+    const { parent, outcome, role, nft_id, owner, url} = this.props;
     this.state = {
       step: -1,
       confirmed: true,
@@ -164,11 +164,13 @@ exports.Done = class extends React.Component {
       old_board: outcome,
       parent: parent,
       first: true,
-      role: role
+      role: role,
+      nft_id: nft_id,
+      owner: owner,
+      url: url
     }
 
   }
-
   componentDidMount() {
     console.log(this.state.board);
     if (this.state.board.win === true) {
@@ -225,6 +227,11 @@ exports.Done = class extends React.Component {
   }
 
   render() {
+    console.log("state");
+    console.log(this.state);
+    console.log("id:");
+    console.log(this.state.nft_id);
+    console.log(this.state.owner)
     return (
       <div>
         {
@@ -233,6 +240,9 @@ exports.Done = class extends React.Component {
               <div id="canvas"></div>
               <div id="again">
                 <h2>Congratulations on winning the game!</h2><br />
+                <h2>nft_id:{this.state.nft_id.toString()}</h2>
+                <h2>owner:{this.state.owner}</h2>
+                <img src={this.state.url} />
                 {/* <button className="confirm">play again</button> */}
               </div>
             </div>

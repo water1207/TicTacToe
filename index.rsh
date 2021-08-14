@@ -98,8 +98,12 @@ const Player = {
   ...hasRandom,
   out: Fun([Board], Null),
   getStep: Fun([Board], UInt),
-  informTimeout: Fun([], Null)
-}
+  informTimeout: Fun([], Null),
+  getId: Fun([], UInt),
+  getUrl: Fun([], Bytes(128)),
+  preview: Fun([UInt, Bytes(128)], Null),
+  showEnd: Fun([Board, UInt, Address, Bytes(128)], Null)
+};
 const Alice = {
   ...Player,
   wager: UInt,
@@ -109,10 +113,13 @@ const Bob = {
   ...Player,
   acceptWager: Fun([UInt], Null)
 }
+const Nft = 
+      { owner: Address,
+        url: Bytes(128) };
 
 export const main = Reach.App(
-  {}, [Participant('Alice', Alice), Participant('Bob', Bob)],
-  (A, B) => {
+  {}, [Participant('Alice', Alice), Participant('Bob', Bob), View('NFT', Nft)],
+  (A, B, vNFT) => {
     const informTimeout = () => {
       each([A, B], () => {
         interact.informTimeout(); }); };
@@ -129,6 +136,16 @@ export const main = Reach.App(
       interact.acceptWager(wager); });
     B.pay(wager)
      .timeout(deadline, () => closeTo(A, informTimeout));
+
+    commit();
+    A.only(() => {
+      const id = declassify(interact.getId());
+      const url = declassify(interact.getUrl());
+    });
+    A.publish(id, url);
+    each([A, B], () => {
+      interact.preview(id, url);
+    });
 
     var board = newBoard(true);
     invariant(balance() == 2 * wager);
@@ -159,15 +176,28 @@ export const main = Reach.App(
           (isWin( board.X ) ? [ 2, 0 ]
           : (isWin( board.O ) ? [ 0, 2 ]
           : [ 1, 1 ]));
+    /* A create an NFT
+    commit();
+    A.only(() => {
+      const id = declassify(interact.getId());
+    });
+    A.publish(id);
+    */
+    const owner = isWin( board.X ) ? A : B;
+    vNFT.owner.set(owner);  //winner get the NFT
+    vNFT.url.set(url);
+
     transfer(toA * wager).to(A);
     transfer(toB * wager).to(B);
     commit();
 
     A.only(()=>{
-      interact.out(finalBoardX(board));
+      interact.showEnd(finalBoardX(board), id, owner, url);
+      //interact.out(finalBoardX(board));
     });
     B.only(()=>{
-      interact.out(finalBoardO(board));
+      interact.showEnd(finalBoardO(board), id, owner, url);
+      //interact.out(finalBoardO(board));
     });
   }
 );
