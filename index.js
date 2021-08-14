@@ -18,7 +18,7 @@ const randomArrayRef = (arr) =>
   arr[Math.floor(Math.random() * arr.length)];
 
 const urlArr = ['https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh',
-          'https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh',
+          'https://ipfs.io/ipfs/Qmd9wCEasMNjnKvaQ8jNGeqeeSXgK8u55SJgP4dMxm4jAW',
           'https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh'];
     
 class App extends React.Component {
