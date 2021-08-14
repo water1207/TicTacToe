@@ -80,8 +80,9 @@ class Player extends React.Component {
     return url;
   }
   async preview(id, url) {
-    //this.setState({view: ''})
     console.log(`nft_id: ${id}, url: ${url}`);
+    this.setState({url: url})
+
   }
 }
 

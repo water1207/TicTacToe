@@ -44,11 +44,9 @@ class Square extends React.Component {
 }
 
 exports.GetStep = class extends React.Component {
-
-
   constructor(props) {
     super(props);
-    const { parent, board } = this.props;
+    const { parent, board, url } = this.props;
     this.state = {
       step: -1,
       confirmed: false,
@@ -56,9 +54,9 @@ exports.GetStep = class extends React.Component {
       board: board,
       old_board: board,
       parent: parent,
+      url: url
     }
   }
-
 
   cellBoth(board, i) {
     return (board.O[i] || board.X[i]);
@@ -111,7 +109,10 @@ exports.GetStep = class extends React.Component {
 
     return (
       <div className="board">
-
+        <div className="bet">
+          <img src={this.state.url} />
+          <p>Games for it!</p>
+        </div>
         {/* <div className="status">{this.state.step}</div> */}
         <div className="board-row">
           {this.renderSquare(0)}
@@ -143,9 +144,21 @@ exports.GetStep = class extends React.Component {
 }
 
 exports.WaitingForResults = class extends React.Component {
+  constructor(props) {
+    super(props);
+    const { url } = this.props;
+    this.state = {
+      url
+    }
+  }
+
   render() {
     return (
       <div>
+        <div className="bet">
+          <img src={this.state.url} />
+          <p>Games for it!</p>
+        </div>
         Waiting for results...
       </div>
     );
@@ -155,7 +168,7 @@ exports.WaitingForResults = class extends React.Component {
 exports.Done = class extends React.Component {
   constructor(props) {
     super(props);
-    const { parent, outcome, role, nft_id, owner, url} = this.props;
+    const { parent, outcome, role, nft_id, owner, url } = this.props;
     this.state = {
       step: -1,
       confirmed: true,
@@ -225,6 +238,32 @@ exports.Done = class extends React.Component {
       old={this.oldState(i)}
     />;
   }
+  getCurrentDate(format) {
+    var now = new Date();
+    var year = now.getFullYear(); //得到年份
+    var month = now.getMonth();//得到月份
+    var date = now.getDate();//得到日期
+    var day = now.getDay();//得到周几
+    var hour = now.getHours();//得到小时
+    var minu = now.getMinutes();//得到分钟
+    var sec = now.getSeconds();//得到秒
+    month = month + 1;
+    if (month < 10) month = "0" + month;
+    if (date < 10) date = "0" + date;
+    if (hour < 10) hour = "0" + hour;
+    if (minu < 10) minu = "0" + minu;
+    if (sec < 10) sec = "0" + sec;
+    var time = "";
+    //精确到天
+    if (format == 1) {
+      time = year + "-" + month + "-" + date;
+    }
+    //精确到分
+    else if (format == 2) {
+      time = year + "-" + month + "-" + date + " " + hour + ":" + minu + ":" + sec;
+    }
+    return time;
+  }
 
   render() {
     console.log("state");
@@ -240,15 +279,30 @@ exports.Done = class extends React.Component {
               <div id="canvas"></div>
               <div id="again">
                 <h2>Congratulations on winning the game!</h2><br />
-                <h2>nft_id:{this.state.nft_id.toString()}</h2>
-                <h2>owner:{this.state.owner}</h2>
-                <img src={this.state.url} />
-                {/* <button className="confirm">play again</button> */}
+                <div class="card">
+                  <div class="card-image">
+                    <img src={this.state.url} alt="NTF" />
+                  </div>
+                  <div class="card-body">
+                    <div class="card-date">
+                      <time>
+                        NTF reward
+                      </time>
+                    </div>
+                    <div class="card-exceprt">
+                      <p>
+                        <b>nft_id:</b>{this.state.nft_id.toString()}
+                      </p>
+                      <p>
+                        <b>owner:</b>{this.state.owner}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           ) : ''
         }
-
 
         Thank you for playing. The outcome of this game was:
         <div className="board">
