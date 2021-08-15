@@ -328,9 +328,9 @@ exports.Done = class extends React.Component {
                 Balance: {this.state.bal} {this.state.standardUnit}
               </div>
               {this.state.role === "Deployer" ? (
-                <p>Bob got it~</p>
+                <p>You lose!</p>
               ) : (
-                <p>Alice got it~</p>
+                <p>You lose!</p>
               )}
             </div>
 
