@@ -46,7 +46,7 @@ class Square extends React.Component {
 exports.GetStep = class extends React.Component {
   constructor(props) {
     super(props);
-    const { parent, board, url } = this.props;
+    const { parent, board, url, nft_id } = this.props;
     this.state = {
       step: -1,
       confirmed: false,
@@ -54,7 +54,8 @@ exports.GetStep = class extends React.Component {
       board: board,
       old_board: board,
       parent: parent,
-      url: url
+      url: url,
+      nft_id: nft_id
     }
   }
 
@@ -111,6 +112,9 @@ exports.GetStep = class extends React.Component {
       <div className="board">
         <div className="bet">
           <img src={this.state.url} />
+          <div class="card-date">
+            NTFID:{this.state.nft_id.toString().substr(0, 7) + "..."}
+          </div>
           <p>Games for it!</p>
         </div>
         {/* <div className="status">{this.state.step}</div> */}
@@ -146,9 +150,10 @@ exports.GetStep = class extends React.Component {
 exports.WaitingForResults = class extends React.Component {
   constructor(props) {
     super(props);
-    const { url } = this.props;
+    const { url, nft_id } = this.props;
     this.state = {
-      url
+      url,
+      nft_id
     }
   }
 
@@ -157,6 +162,9 @@ exports.WaitingForResults = class extends React.Component {
       <div>
         <div className="bet">
           <img src={this.state.url} />
+          <div class="card-date">
+            NTFID:{this.state.nft_id.toString().substr(0, 7) + "..."}
+          </div>
           <p>Games for it!</p>
         </div>
         Waiting for results...
@@ -301,7 +309,19 @@ exports.Done = class extends React.Component {
                 </div>
               </div>
             </div>
-          ) : ''
+          ) : (
+            <div className="bet">
+              <img src={this.state.url} />
+              <div class="card-date">
+                NTFID:{this.state.nft_id.toString().substr(0, 7) + "..."}
+              </div>
+              {this.state.role === "Deployer" ? (
+                <p>Bob got it~</p>
+              ) : (
+                <p>Alice for it!</p>
+              )}
+            </div>
+          )
         }
 
         Thank you for playing. The outcome of this game was:
