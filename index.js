@@ -7,6 +7,11 @@ import './index.css';
 import * as backend from './build/index.main.mjs';
 import * as loader from '@reach-sh/stdlib';
 
+import img1 from './img/1.png'
+import img2 from './img/2.png'
+import img3 from './img/3.png'
+import img4 from './img/4.png'
+
 // import * as reach from '@reach-sh/stdlib/ETH';
 import {loadStdlib} from '@reach-sh/stdlib';
 const reach = loadStdlib(process.env);
@@ -17,10 +22,12 @@ const defaults = {defaultFundAmt: '100', defaultWager: '50', standardUnit};
 const randomArrayRef = (arr) =>
   arr[Math.floor(Math.random() * arr.length)];
 
-const urlArr = ['https://ipfs.io/ipfs/QmZEUm71Fky7G2YANJMVyorxzc3xnJjjWy7xpn9tsbxDSP', //Green
-          'https://ipfs.io/ipfs/QmahEGV3i9DfNQFcxp4qMFLn67B1k3PymKwjerTZgTJHPf',  //Blue
-          'https://ipfs.io/ipfs/QmcgUbHBvUdinB1Gh3cypZZ7k2yJs2kSyrZ2fJ1V3Hd2QM',  //Purple
-          'https://ipfs.io/ipfs/QmbgyFoDhNj9oueZgJLpLqXkBTpsMHaihELvinK1VKfCVq'];
+// const urlArr = ['https://ipfs.io/ipfs/QmZEUm71Fky7G2YANJMVyorxzc3xnJjjWy7xpn9tsbxDSP', //Green
+//           'https://ipfs.io/ipfs/QmahEGV3i9DfNQFcxp4qMFLn67B1k3PymKwjerTZgTJHPf',  //Blue
+//           'https://ipfs.io/ipfs/QmcgUbHBvUdinB1Gh3cypZZ7k2yJs2kSyrZ2fJ1V3Hd2QM',  //Purple
+//           'https://ipfs.io/ipfs/QmbgyFoDhNj9oueZgJLpLqXkBTpsMHaihELvinK1VKfCVq'];
+
+const urlArr = [img1, img2, img3, img4];
 
 let acc = null;
     
@@ -87,8 +94,8 @@ class Player extends React.Component {
     return url;
   }
   async preview(id, url) {
-    console.log(`nft_id: ${id}, url: ${url}`);
-    this.setState({url, nft_id: id})
+    console.log(`nft_id: ${id}, url: ${url}`);    
+    this.setState({url: url.trim(), nft_id: id})
 
   }
 }
