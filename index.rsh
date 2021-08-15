@@ -176,13 +176,7 @@ export const main = Reach.App(
           (isWin( board.X ) ? [ 2, 0 ]
           : (isWin( board.O ) ? [ 0, 2 ]
           : [ 1, 1 ]));
-    /* A create an NFT
-    commit();
-    A.only(() => {
-      const id = declassify(interact.getId());
-    });
-    A.publish(id);
-    */
+    
     const owner = isWin( board.X ) ? A : B;
     vNFT.owner.set(owner);  //winner get the NFT
     vNFT.url.set(url);
@@ -193,11 +187,9 @@ export const main = Reach.App(
 
     A.only(()=>{
       interact.showEnd(finalBoardX(board), id, owner, url);
-      //interact.out(finalBoardX(board));
     });
     B.only(()=>{
       interact.showEnd(finalBoardO(board), id, owner, url);
-      //interact.out(finalBoardO(board));
     });
   }
 );
