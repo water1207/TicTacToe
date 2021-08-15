@@ -17,9 +17,10 @@ const defaults = {defaultFundAmt: '100', defaultWager: '50', standardUnit};
 const randomArrayRef = (arr) =>
   arr[Math.floor(Math.random() * arr.length)];
 
-const urlArr = ['https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh',
-          'https://ipfs.io/ipfs/Qmd9wCEasMNjnKvaQ8jNGeqeeSXgK8u55SJgP4dMxm4jAW',
-          'https://ipfs.io/ipfs/QmVP8biCWV7LSSAQENi4f4KWNwAySsi7ezL12oCssJKQfh'];
+const urlArr = ['https://ipfs.io/ipfs/QmZEUm71Fky7G2YANJMVyorxzc3xnJjjWy7xpn9tsbxDSP', //Green
+          'https://ipfs.io/ipfs/QmahEGV3i9DfNQFcxp4qMFLn67B1k3PymKwjerTZgTJHPf',  //Blue
+          'https://ipfs.io/ipfs/QmcgUbHBvUdinB1Gh3cypZZ7k2yJs2kSyrZ2fJ1V3Hd2QM',  //Purple
+          'https://ipfs.io/ipfs/QmbgyFoDhNj9oueZgJLpLqXkBTpsMHaihELvinK1VKfCVq'];
     
 class App extends React.Component {
   constructor(props) {
