@@ -5,67 +5,76 @@ const ROWS = 3;
 const COLS = 3;
 const CELLS = ROWS * COLS;
 
-const b = Array(Bool, 9);
-const Board = Object({
+const cells_type = Array(Bool, 9);
+const Board_type = Object({
   turn:Bool,
-  O:b,
-  X:b,
+  O:cells_type,
+  X:cells_type,
   win:Bool
 })
 
-const bv = Array.replicate(CELLS,false); //全是false 长度为9的数组
+const cells = Array.replicate(CELLS,false); //全是false 长度为9的数组
 const newBoard = (turn) => ({   //function 参数true X / O
   turn: turn, 
-  O:bv,
-  X:bv,
+  O:cells,
+  X:cells,
   win: false
 })
-const cellBoth = (st, i) =>   //st:Board  if true 下过了
-      (st.X[i] || st.O[i]);
+const cellBoth = (board, i) =>   //board:Board  if true 下过了
+      (board.X[i] || board.O[i]);
 // 这个位置没下过
-const validMove = (st, m) => (! cellBoth(st, m));   
+const validMove = (board, m) => (! cellBoth(board, m));
+// 下的位置合理
+const validStep = (step) => (0<=step && step<CELLS);
 
+// 前端下的位置合规
+function getValidPlay(interact, board) {
+  const step = interact.getStep(board);
+  assume(validStep(step));
+  assume(validMove(board, step));
+  return declassify(step); 
+}
 
 // 下棋
 function step(board,pos){
-  // require(validMove(board,pos));
-  const ppos = pos % CELLS;
+  require(validStep(pos));
+  require(validMove(board,pos));
   
   return {
     turn:!board.turn,
-    X:board.turn?  board.X.set(ppos,true) : board.X ,
-    O:board.turn?  board.O : board.O.set(ppos,true) ,
+    X:board.turn?  board.X.set(pos,true) : board.X ,
+    O:board.turn?  board.O : board.O.set(pos,true) ,
     win: false
   };
 }
-function getCell(bb,i){  //Board.X / Borad.O 
+function getCell(singleBoard,i){  //Board.X / Borad.O 
   if(0<=i && i<CELLS){
-    return bb[i];
+    return singleBoard[i];
   }else{
     return false;
   }
 }
 
-function getLine(bb,i,len){  //0 4 8 步长
+function getLine(singleBoard,i,len){  //0 4 8 步长
   return (
-    getCell(bb,i) &&
-    getCell(bb,add(i,len)) &&
-    getCell(bb,i+len+len));
+    getCell(singleBoard,i) &&
+    getCell(singleBoard,add(i,len)) &&
+    getCell(singleBoard,i+len+len));
 }
 
-function isWin(bb) {
+function isWin(singleBoard) {
   return (
     //横
-    getLine(bb,0,1) ||
-    getLine(bb,3,1) ||
-    getLine(bb,6,1) ||
+    getLine(singleBoard,0,1) ||
+    getLine(singleBoard,3,1) ||
+    getLine(singleBoard,6,1) ||
     //竖
-    getLine(bb,0,3) ||
-    getLine(bb,1,3) ||
-    getLine(bb,2,3) ||
+    getLine(singleBoard,0,3) ||
+    getLine(singleBoard,1,3) ||
+    getLine(singleBoard,2,3) ||
     //斜
-    getLine(bb,0,4) ||
-    getLine(bb,2,2)
+    getLine(singleBoard,0,4) ||
+    getLine(singleBoard,2,2)
   );
 }
 function allPlaced(board){   //是否下满
@@ -96,13 +105,13 @@ const finalBoardO = (board) => ({
 
 const Player = {
   ...hasRandom,
-  out: Fun([Board], Null),
-  getStep: Fun([Board], UInt),
+  out: Fun([Board_type], Null),
+  getStep: Fun([Board_type], UInt),
   informTimeout: Fun([], Null),
   getId: Fun([], UInt),
   getUrl: Fun([], Bytes(128)),
   preview: Fun([UInt, Bytes(128)], Null),
-  showEnd: Fun([Board, UInt, Address, Bytes(128)], Null)
+  showEnd: Fun([Board_type, UInt, Address, Bytes(128)], Null)
 };
 const Alice = {
   ...Player,
@@ -153,24 +162,24 @@ export const main = Reach.App(
       if(board.turn){
         commit();
         A.only(() => {
-          //interact.out(board)
-          const moveA = declassify(interact.getStep(board)); });   //传入当前棋盘状态，返回点击的格子number
-        A.publish(moveA)
+          //传入当前棋盘状态，返回点击的格子number
+          const Aplay = getValidPlay(interact,board);});
+        A.publish(Aplay)
          .timeout(deadline, () => closeTo(B, informTimeout));
 
-        board = step(board, moveA);   //更新棋盘
+        board = step(board, Aplay);   //更新棋盘
         continue;
       }else {
         commit();
 
         B.only(() => {
-          //interact.out(board)
-          const moveB = declassify(interact.getStep(board));});
-        B.publish(moveB)
+          const Bplay = getValidPlay(interact,board);});
+        B.publish(Bplay)
          .timeout(deadline, () => closeTo(A, informTimeout));
 
-        board = step(board, moveB);
-        continue; } 
+        board = step(board, Bplay);
+        continue; 
+      } 
     }
     const [ toA, toB ] =
           (isWin( board.X ) ? [ 2, 0 ]
