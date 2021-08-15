@@ -327,6 +327,11 @@ exports.Done = class extends React.Component {
               <div className="balance">
                 Balance: {this.state.bal} {this.state.standardUnit}
               </div>
+              {this.state.role === "Deployer" ? (
+                <p>Bob got it~</p>
+              ) : (
+                <p>Alice got it~</p>
+              )}
             </div>
 
           )

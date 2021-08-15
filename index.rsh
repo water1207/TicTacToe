@@ -13,17 +13,17 @@ const Board = Object({
   win:Bool
 })
 
-const bv = Array.replicate(CELLS,false);
-const newBoard = (turn) => ({
-  turn: turn,
+const bv = Array.replicate(CELLS,false); //全是false 长度为9的数组
+const newBoard = (turn) => ({   //function 参数true X / O
+  turn: turn, 
   O:bv,
   X:bv,
   win: false
 })
-const cellBoth = (st, i) =>
+const cellBoth = (st, i) =>   //st:Board  if true 下过了
       (st.X[i] || st.O[i]);
 // 这个位置没下过
-const validMove = (st, m) => (! cellBoth(st, m));
+const validMove = (st, m) => (! cellBoth(st, m));   
 
 
 // 下棋
@@ -38,7 +38,7 @@ function step(board,pos){
     win: false
   };
 }
-function getCell(bb,i){
+function getCell(bb,i){  //Board.X / Borad.O 
   if(0<=i && i<CELLS){
     return bb[i];
   }else{
@@ -46,7 +46,7 @@ function getCell(bb,i){
   }
 }
 
-function getLine(bb,i,len){
+function getLine(bb,i,len){  //0 4 8 步长
   return (
     getCell(bb,i) &&
     getCell(bb,add(i,len)) &&
@@ -68,7 +68,7 @@ function isWin(bb) {
     getLine(bb,2,2)
   );
 }
-function allPlaced(board){
+function allPlaced(board){   //是否下满
   return (
     cellBoth(board,0) &&
     cellBoth(board,1) &&
@@ -82,7 +82,7 @@ function allPlaced(board){
   )
 }
 function isDone(board){
-  return (isWin(board.O) || isWin(board.X) || allPlaced(board));
+  return (isWin(board.O) || isWin(board.X) || allPlaced(board));   //是否结束
 }
 const finalBoardX = (board) => ({
   ...board,
@@ -153,18 +153,18 @@ export const main = Reach.App(
       if(board.turn){
         commit();
         A.only(() => {
-          interact.out(board)
-          const moveA = declassify(interact.getStep(board)); });
+          //interact.out(board)
+          const moveA = declassify(interact.getStep(board)); });   //传入当前棋盘状态，返回点击的格子number
         A.publish(moveA)
          .timeout(deadline, () => closeTo(B, informTimeout));
 
-        board = step(board, moveA);
+        board = step(board, moveA);   //更新棋盘
         continue;
       }else {
         commit();
 
         B.only(() => {
-          interact.out(board)
+          //interact.out(board)
           const moveB = declassify(interact.getStep(board));});
         B.publish(moveB)
          .timeout(deadline, () => closeTo(A, informTimeout));
@@ -176,13 +176,7 @@ export const main = Reach.App(
           (isWin( board.X ) ? [ 2, 0 ]
           : (isWin( board.O ) ? [ 0, 2 ]
           : [ 1, 1 ]));
-    /* A create an NFT
-    commit();
-    A.only(() => {
-      const id = declassify(interact.getId());
-    });
-    A.publish(id);
-    */
+    
     const owner = isWin( board.X ) ? A : B;
     vNFT.owner.set(owner);  //winner get the NFT
     vNFT.url.set(url);
@@ -193,11 +187,9 @@ export const main = Reach.App(
 
     A.only(()=>{
       interact.showEnd(finalBoardX(board), id, owner, url);
-      //interact.out(finalBoardX(board));
     });
     B.only(()=>{
       interact.showEnd(finalBoardO(board), id, owner, url);
-      //interact.out(finalBoardO(board));
     });
   }
 );
