@@ -105,7 +105,7 @@ const finalBoardO = (board) => ({
 
 const Player = {
   ...hasRandom,
-  out: Fun([Board_type], Null),
+  //out: Fun([Board_type], Null),
   getStep: Fun([Board_type], UInt),
   informTimeout: Fun([], Null),
   getId: Fun([], UInt),
