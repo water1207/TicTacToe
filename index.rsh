@@ -1,6 +1,5 @@
 'reach 0.1';
 
-//const DEADLINE = 60;
 const ROWS = 3;
 const COLS = 3;
 const CELLS = ROWS * COLS;
@@ -13,21 +12,19 @@ const Board_type = Object({
   win:Bool
 })
 
-const cells = Array.replicate(CELLS,false); //全是false 长度为9的数组
-const newBoard = (turn) => ({   //function 参数true X / O
+const cells = Array.replicate(CELLS,false); 
+const newBoard = (turn) => ({   
   turn: turn, 
   O:cells,
   X:cells,
   win: false
 })
-const cellBoth = (board, i) =>   //board:Board  if true 下过了
+const cellBoth = (board, i) =>   
       (board.X[i] || board.O[i]);
-// 这个位置没下过
+
 const validMove = (board, m) => (! cellBoth(board, m));
-// 下的位置合理
 const validStep = (step) => (0<=step && step<CELLS);
 
-// 前端下的位置合规
 function getValidPlay(interact, board) {
   const step = interact.getStep(board);
   assume(validStep(step));
@@ -35,7 +32,6 @@ function getValidPlay(interact, board) {
   return declassify(step); 
 }
 
-// 下棋
 function step(board,pos){
   require(validStep(pos));
   require(validMove(board,pos));
@@ -47,7 +43,7 @@ function step(board,pos){
     win: false
   };
 }
-function getCell(singleBoard,i){  //Board.X / Borad.O 
+function getCell(singleBoard,i){  
   if(0<=i && i<CELLS){
     return singleBoard[i];
   }else{
@@ -55,7 +51,7 @@ function getCell(singleBoard,i){  //Board.X / Borad.O
   }
 }
 
-function getLine(singleBoard,i,len){  //0 4 8 步长
+function getLine(singleBoard,i,len){  
   return (
     getCell(singleBoard,i) &&
     getCell(singleBoard,add(i,len)) &&
@@ -64,20 +60,20 @@ function getLine(singleBoard,i,len){  //0 4 8 步长
 
 function isWin(singleBoard) {
   return (
-    //横
+
     getLine(singleBoard,0,1) ||
     getLine(singleBoard,3,1) ||
     getLine(singleBoard,6,1) ||
-    //竖
+
     getLine(singleBoard,0,3) ||
     getLine(singleBoard,1,3) ||
     getLine(singleBoard,2,3) ||
-    //斜
+
     getLine(singleBoard,0,4) ||
     getLine(singleBoard,2,2)
   );
 }
-function allPlaced(board){   //是否下满
+function allPlaced(board){   
   return (
     cellBoth(board,0) &&
     cellBoth(board,1) &&
@@ -91,7 +87,7 @@ function allPlaced(board){   //是否下满
   )
 }
 function isDone(board){
-  return (isWin(board.O) || isWin(board.X) || allPlaced(board));   //是否结束
+  return (isWin(board.O) || isWin(board.X) || allPlaced(board));   
 }
 const finalBoardX = (board) => ({
   ...board,
@@ -105,7 +101,6 @@ const finalBoardO = (board) => ({
 
 const Player = {
   ...hasRandom,
-  out: Fun([Board_type], Null),
   getStep: Fun([Board_type], UInt),
   informTimeout: Fun([], Null),
   getId: Fun([], UInt),
@@ -116,7 +111,7 @@ const Player = {
 const Alice = {
   ...Player,
   wager: UInt,
-  deadline: UInt, // time delta (blocks/rounds)
+  deadline: UInt, 
 }
 const Bob = {
   ...Player,
@@ -162,12 +157,11 @@ export const main = Reach.App(
       if(board.turn){
         commit();
         A.only(() => {
-          //传入当前棋盘状态，返回点击的格子number
           const Aplay = getValidPlay(interact,board);});
         A.publish(Aplay)
          .timeout(deadline, () => closeTo(B, informTimeout));
 
-        board = step(board, Aplay);   //更新棋盘
+        board = step(board, Aplay);   
         continue;
       }else {
         commit();
@@ -187,7 +181,7 @@ export const main = Reach.App(
           : [ 1, 1 ]));
     
     const owner = isWin( board.X ) ? A : B;
-    vNFT.owner.set(owner);  //winner get the NFT
+    vNFT.owner.set(owner);  
     vNFT.url.set(url);
 
     transfer(toA * wager).to(A);
