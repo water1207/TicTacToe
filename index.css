@@ -217,6 +217,14 @@ canvas {
 .bet p {
   margin-top: 5px;
 }
+.balance {
+  position: absolute;
+  right: 3%;
+  top: 5%;
+  font-size: 18px;
+  letter-spacing: 1px;
+  /* font-weight: 600; */
+}
 .winNtf {
   width: 100px;
   height: 100px;

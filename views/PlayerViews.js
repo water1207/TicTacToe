@@ -176,7 +176,7 @@ exports.WaitingForResults = class extends React.Component {
 exports.Done = class extends React.Component {
   constructor(props) {
     super(props);
-    const { parent, outcome, role, nft_id, owner, url } = this.props;
+    const { parent, outcome, role, nft_id, owner, url, bal, standardUnit } = this.props;
     this.state = {
       step: -1,
       confirmed: true,
@@ -188,7 +188,9 @@ exports.Done = class extends React.Component {
       role: role,
       nft_id: nft_id,
       owner: owner,
-      url: url
+      url: url,
+      bal,
+      standardUnit,
     }
 
   }
@@ -310,17 +312,23 @@ exports.Done = class extends React.Component {
               </div>
             </div>
           ) : (
-            <div className="bet">
-              <img src={this.state.url} />
-              <div class="card-date">
-                NTFID:{this.state.nft_id.toString().substr(0, 7) + "..."}
+            <div>
+              <div className="bet">
+                <img src={this.state.url} />
+                <div class="card-date">
+                  NTFID:{this.state.nft_id.toString().substr(0, 7) + "..."}
+                </div>
+                {this.state.role === "Deployer" ? (
+                  <p>Bob got it~</p>
+                ) : (
+                  <p>Alice got it~</p>
+                )}
               </div>
-              {this.state.role === "Deployer" ? (
-                <p>Bob got it~</p>
-              ) : (
-                <p>Alice for it!</p>
-              )}
+              <div className="balance">
+                Balance: {this.state.bal} {this.state.standardUnit}
+              </div>
             </div>
+
           )
         }
 
