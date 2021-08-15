@@ -21,6 +21,8 @@ const urlArr = ['https://ipfs.io/ipfs/QmZEUm71Fky7G2YANJMVyorxzc3xnJjjWy7xpn9tsb
           'https://ipfs.io/ipfs/QmahEGV3i9DfNQFcxp4qMFLn67B1k3PymKwjerTZgTJHPf',  //Blue
           'https://ipfs.io/ipfs/QmcgUbHBvUdinB1Gh3cypZZ7k2yJs2kSyrZ2fJ1V3Hd2QM',  //Purple
           'https://ipfs.io/ipfs/QmbgyFoDhNj9oueZgJLpLqXkBTpsMHaihELvinK1VKfCVq'];
+
+let acc = null;
     
 class App extends React.Component {
   constructor(props) {
@@ -28,7 +30,7 @@ class App extends React.Component {
     this.state = {view: 'ConnectAccount', ...defaults};
   }
   async componentDidMount() {
-    const acc = await reach.getDefaultAccount(); 
+    acc = await reach.getDefaultAccount(); 
     const balAtomic = await reach.balanceOf(acc);
     const bal = reach.formatCurrency(balAtomic, 4);
     this.setState({acc, bal});
@@ -55,6 +57,10 @@ class Player extends React.Component {
     this.setState({view: 'Done', outcome: arr});
   }
   async showEnd(arr, id, owner, url) {
+    const balAtomic = await reach.balanceOf(acc);
+    const bal = reach.formatCurrency(balAtomic, 4);
+    this.setState({bal});
+
     this.setState({view: 'Done', 
                    outcome: arr, 
                    nft_id: id, 
